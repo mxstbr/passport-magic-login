@@ -43,17 +43,20 @@ const magicLogin = new MagicLoginStrategy({
       body: `Click this link to finish logging in: https://yourcompany.com${href}`
     })
   },
-  // The classic Passport verify callback that every strategy has.
+  // Called once the magic link is confirmed as the final step for authentication.
+  // Matches the provided payload to a user record in your database.
   // "payload" contains { "destination": "email or phone number" }
   // and you have to call callback() with the user data associated
   // with that email or phone number.
   verify: (payload, callback) => {
     // Get or create a user with the provided email from the database
-    getOrCreateUserWithEmail(payload.destination).then(user => {
-      callback(null, user)
-    }).catch(err => {
-      callback(err)
-    })
+    getOrCreateUserWithEmail(payload.destination)
+      .then(user => {
+        callback(null, user)
+      })
+      .catch(err => {
+        callback(err)
+      })
   }
 })
 
