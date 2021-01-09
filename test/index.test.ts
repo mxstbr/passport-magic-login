@@ -18,6 +18,10 @@ it('returns some properties', () => {
     })
   ).toMatchInlineSnapshot(`
     Object {
+      "callbackUrl": "/auth/magiclink/callback",
+      "confirm": [Function],
+      "confirmUrl": "/auth/magiclink/confirm",
+      "send": [Function],
       "strategy": [Function],
     }
   `);
