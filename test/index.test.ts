@@ -1,8 +1,8 @@
-import createMagicLink from '../src';
+import MagicLinkStrategy from '../src';
 
 it('returns some properties', () => {
   expect(
-    createMagicLink({
+    new MagicLinkStrategy({
       secret: 'asdf',
       callbackUrl: '/auth/magiclink/callback',
       confirmUrl: '/auth/magiclink/confirm',
@@ -17,21 +17,17 @@ it('returns some properties', () => {
       },
     })
   ).toMatchInlineSnapshot(`
-    Object {
-      "callbackUrl": "/auth/magiclink/callback",
-      "confirm": [Function],
-      "confirmUrl": "/auth/magiclink/confirm",
-      "send": [Function],
-      "strategy": MagicLinkStrategy {
-        "_options": Object {
-          "callbackUrl": "/auth/magiclink/callback",
-          "confirmUrl": "/auth/magiclink/confirm",
-          "secret": "asdf",
-          "sendMagicLink": [Function],
-          "verify": [Function],
-        },
-        "name": "magiclogin",
+    MagicLinkStrategy {
+      "_options": Object {
+        "callbackUrl": "/auth/magiclink/callback",
+        "confirmUrl": "/auth/magiclink/confirm",
+        "secret": "asdf",
+        "sendMagicLink": [Function],
+        "verify": [Function],
       },
+      "callbackUrl": "/auth/magiclink/callback",
+      "confirmUrl": "/auth/magiclink/confirm",
+      "name": "magiclogin",
     }
   `);
 });
