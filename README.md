@@ -1,11 +1,11 @@
-# passport-magiclink
+# passport-magic-login
 
 ## Usage
 
 ### Backend setup
 
 ```JS
-import createMagicLink from "passport-magiclink"
+import createMagicLink from "passport-magic-login"
 
 const magicLink = createMagicLink({
   secret: process.env.MAGIC_LINK_SECRET,
