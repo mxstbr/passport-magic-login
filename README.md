@@ -7,7 +7,7 @@ Passwordless authentication with magic links for Passport.js 🔑
 - User interface agnostic: all you need is an input and a confirmation screen
 - Handles secure token generation, expiration and confirmation
 
-Originally implemented by [Tobias Lins](https://twitter.com/linstobias) for [Splitbee](https://splitbee.io). Here's a live, production example from [Feedback Fish](https://feedback.fish):
+Originally implemented by [Tobias Lins](https://twitter.com/linstobias) for [Splitbee](https://splitbee.io) and eventually extracted for [Feedback Fish](https://feedback.fish):
 
 <img width="1230" alt="Screenshot 2021-01-09 at 16 55 23" src="https://user-images.githubusercontent.com/7525670/104096256-ae24fc00-529b-11eb-9d21-cebae7bc706d.png">
 
