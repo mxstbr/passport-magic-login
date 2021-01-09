@@ -31,7 +31,7 @@
     "singleQuote": true,
     "trailingComma": "es5"
   },
-  "name": "passport-magiclink",
+  "name": "passport-magic-login",
   "author": "Max Stoiber",
   "module": "dist/passport-magiclink.esm.js",
   "size-limit": [
