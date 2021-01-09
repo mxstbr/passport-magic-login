@@ -33,14 +33,14 @@
   },
   "name": "passport-magic-login",
   "author": "Max Stoiber",
-  "module": "dist/passport-magiclink.esm.js",
+  "module": "dist/passport-magic-login.esm.js",
   "size-limit": [
     {
-      "path": "dist/passport-magiclink.cjs.production.min.js",
+      "path": "dist/passport-magic-login.cjs.production.min.js",
       "limit": "10 KB"
     },
     {
-      "path": "dist/passport-magiclink.esm.js",
+      "path": "dist/passport-magic-login.esm.js",
       "limit": "10 KB"
     }
   ],
