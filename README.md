@@ -18,20 +18,27 @@ As seen on [Splitbee](https://splitbee.io) and [Feedback Fish](https://feedback.
 ```JS
 import MagicLoginStrategy from "passport-magic-login"
 
+// Important note: all these options are REQUIRED!
 const magicLogin = new MagicLoginStrategy({
-  secret: process.env.MAGIC_LINK_SECRET,
-  callbackUrl: "/auth/magiclogin/callback",
-  confirmUrl: "/auth/magiclogin/confirm",
+  secret: process.env.MAGIC_LINK_SECRET, // Used to encrypt the authentication token. Needs to be long, unique and (duh) secret.
+  callbackUrl: "/auth/magiclogin/callback", // The URL you want to expose for the callback
+  confirmUrl: "/auth/magiclogin/confirm", // The URL you want to expose to confirm a token
+  // Send the generated magic link with the token to the user provided destination
+  // The destination is what you POST from the client, so it could be an email
+  // or a phone number, whatever you choose.
   sendMagicLink: async (destination, href) => {
-    // You have to implement sending the login link to the right 
-    // destination (e.g. email or sms) yourself!
+    // "href" is something like "/auth/magiclogin/confirm?token=<longtoken>"
     await sendEmail({
       to: destination,
       body: `Click this link to finish logging in: https://yourcompany.com${href}`
     })
   },
+  // The classic Passport verify callback that every strategy has.
+  // "payload" contains { "destination": "email or phone number" }
+  // and you have to call callback() with the user data associated
+  // with that email or phone number.
   verify: (payload, callback) => {
-    // Get or create a user with the provided email in your database
+    // Get or create a user with the provided email from the database
     getOrCreateUserWithEmail(payload.destination).then(user => {
       callback(null, user)
     }).catch(err => {
@@ -40,8 +47,10 @@ const magicLogin = new MagicLoginStrategy({
   }
 })
 
+// Tell Passport about the magic login strategy
 passport.use(magicLogin)
 
+// Add the required routes to Express
 app.post("/auth/magiclogin", magicLogin.send);
 app.get(magicLogin.confirmUrl, magicLogin.confirm);
 app.get(magicLogin.callbackUrl, passport.authenticate("magiclogin"));
@@ -50,6 +59,7 @@ app.get(magicLogin.callbackUrl, passport.authenticate("magiclogin"));
 ### Frontend
 
 ```JS
+// POST a request with your users email or phone number to the server
 fetch(`/auth/magiclogin`, {
   method: `POST`,
   body: JSON.stringify({
@@ -61,9 +71,13 @@ fetch(`/auth/magiclogin`, {
 })
   .then(res => res.json())
   .then(json => {
-    // You can now prompt the user to click on the link in their email
-    // We recommend you display json.code in the UI (!) so the user can verify
-    // that they're clicking on the link for their _current_ login attempt
-    document.body.innerText = json.code
+    if (json.success) {
+      // The request successfully completed and the email to the user with the
+      // magic login link was sent!
+      // You can now prompt the user to click on the link in their email
+      // We recommend you display json.code in the UI (!) so the user can verify
+      // that they're clicking on the link for their _current_ login attempt
+      document.body.innerText = json.code
+    }
   })
 ```
