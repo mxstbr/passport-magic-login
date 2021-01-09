@@ -33,6 +33,8 @@ function MagicLoginStrategy(options: Options) {
   this.callbackUrl = options.callbackUrl;
   this.confirmUrl = options.confirmUrl;
   this._options = options;
+  this.send = this.send.bind(this);
+  this.confirm = this.confirm.bind(this);
 }
 
 util.inherits(MagicLoginStrategy, Strategy);
@@ -56,10 +58,7 @@ MagicLoginStrategy.prototype.authenticate = function(req) {
   self._options.verify(payload, verifyCallback);
 };
 
-MagicLoginStrategy.prototype.send = async function(
-  req: Request,
-  res: Response
-) {
+MagicLoginStrategy.prototype.send = function(req: Request, res: Response) {
   if (!req.body.destination) {
     res.status(400).send('Please specify the destination.');
     return;
@@ -72,13 +71,19 @@ MagicLoginStrategy.prototype.send = async function(
     code,
   });
 
-  await this._options.sendMagicLink(
-    req.body.destination,
-    `${this._options.confirmUrl}?token=${jwt}`,
-    code
-  );
-
-  res.json({ success: true, code });
+  this._options
+    .sendMagicLink(
+      req.body.destination,
+      `${this._options.confirmUrl}?token=${jwt}`,
+      code
+    )
+    .then(() => {
+      res.json({ success: true, code });
+    })
+    .catch((error: any) => {
+      console.error(error);
+      res.json({ success: false, error });
+    });
 };
 
 MagicLoginStrategy.prototype.confirm = function(req: Request, res: Response) {
