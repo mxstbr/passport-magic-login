@@ -20,32 +20,39 @@ interface Options {
   verify: VerifyCallback;
 }
 
-const createMagicLink = (options: Options) => {
-  function MagicLinkStrategy() {
-    Strategy.call(this);
-  }
+declare class MagicLinkStrategy {
+  constructor(options: Options);
+  authenticate(req: Request): void;
+}
 
-  MagicLinkStrategy.prototype.authenticate = function(req: Request) {
-    const self = this;
-    const payload = decodeToken({
-      secret: options.secret,
-      token: req.query.token as string,
-    });
-    const verifyCallback = function(err?: Error, user?: Object, info?: any) {
-      if (err) {
-        return self.error(err);
-      } else if (!user) {
-        return self.fail(info);
-      } else {
-        return self.success(user, info);
-      }
-    };
+function MagicLinkStrategy(options: Options) {
+  Strategy.call(this);
+  this.name = 'magiclogin';
+  this._options = options;
+}
 
-    options.verify(payload, verifyCallback);
+util.inherits(MagicLinkStrategy, Strategy);
+
+MagicLinkStrategy.prototype.authenticate = function(req) {
+  const self = this;
+  const payload = decodeToken({
+    secret: self._options.secret,
+    token: req.query.token as string,
+  });
+  const verifyCallback = function(err?: Error, user?: Object, info?: any) {
+    if (err) {
+      return self.error(err);
+    } else if (!user) {
+      return self.fail(info);
+    } else {
+      return self.success(user, info);
+    }
   };
 
-  util.inherits(MagicLinkStrategy, Strategy);
+  self.options.verify(payload, verifyCallback);
+};
 
+const createMagicLink = (options: Options) => {
   const sendMagicLink = async (req: Request, res: Response) => {
     if (!req.body.destination) {
       res.status(400).send('Please specify the destination.');
@@ -82,7 +89,7 @@ const createMagicLink = (options: Options) => {
   };
 
   return {
-    strategy: MagicLinkStrategy,
+    strategy: new MagicLinkStrategy(options),
     send: sendMagicLink,
     confirm: confirmMagicLink,
     confirmUrl: options.confirmUrl,

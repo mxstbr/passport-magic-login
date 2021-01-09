@@ -22,7 +22,16 @@ it('returns some properties', () => {
       "confirm": [Function],
       "confirmUrl": "/auth/magiclink/confirm",
       "send": [Function],
-      "strategy": [Function],
+      "strategy": MagicLinkStrategy {
+        "_options": Object {
+          "callbackUrl": "/auth/magiclink/callback",
+          "confirmUrl": "/auth/magiclink/confirm",
+          "secret": "asdf",
+          "sendMagicLink": [Function],
+          "verify": [Function],
+        },
+        "name": "magiclogin",
+      },
     }
   `);
 });
