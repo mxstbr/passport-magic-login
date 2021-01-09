@@ -1,8 +1,13 @@
 # passport-magic-login
 
-Passwordless authentication with magic links for Passport.js.
+Passwordless authentication with magic links for Passport.js 🔑
 
-As seen on [Splitbee](https://splitbee.io) and [Feedback Fish](https://feedback.fish):
+- User signup and login without passwords
+- Supports magic links sent via email, SMS or any other method you prefer
+- User interface agnostic: all you need is an input and a confirmation screen
+- Handles secure token generation, expiration and confirmation
+
+Originally implemented by [Tobias Lins](https://twitter.com/linstobias) for [Splitbee](https://splitbee.io). Here's a live, production example from [Feedback Fish](https://feedback.fish):
 
 <img width="1230" alt="Screenshot 2021-01-09 at 16 55 23" src="https://user-images.githubusercontent.com/7525670/104096256-ae24fc00-529b-11eb-9d21-cebae7bc706d.png">
 
@@ -12,6 +17,11 @@ As seen on [Splitbee](https://splitbee.io) and [Feedback Fish](https://feedback.
 
 
 ## Usage
+
+To use magic link authentication, you have to:
+
+1. Setup the Passport strategy and Express routes on your server
+2. POST a request with the users email or phone number from the client once they have entered it into the login input
 
 ### Backend setup
 
@@ -56,10 +66,10 @@ app.get(magicLogin.confirmUrl, magicLogin.confirm);
 app.get(magicLogin.callbackUrl, passport.authenticate("magiclogin"));
 ```
 
-### Frontend
+### Frontend setup
 
 ```JS
-// POST a request with your users email or phone number to the server
+// POST a request with the users email or phone number to the server
 fetch(`/auth/magiclogin`, {
   method: `POST`,
   body: JSON.stringify({
