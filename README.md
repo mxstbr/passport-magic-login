@@ -1,5 +1,16 @@
 # passport-magic-login
 
+Passwordless authentication with magic links for Passport.js.
+
+As seen on [Splitbee](https://splitbee.io) and [Feedback Fish](https://feedback.fish):
+
+<img width="1230" alt="Screenshot 2021-01-09 at 16 55 23" src="https://user-images.githubusercontent.com/7525670/104096256-ae24fc00-529b-11eb-9d21-cebae7bc706d.png">
+
+<img width="1230" alt="Screenshot 2021-01-09 at 16 55 28" src="https://user-images.githubusercontent.com/7525670/104096254-ad8c6580-529b-11eb-9c96-d12e9d14c543.png">
+
+<img width="1230" alt="Screenshot 2021-01-09 at 16 56 24" src="https://user-images.githubusercontent.com/7525670/104096252-a9604800-529b-11eb-92d5-31a144871fe4.png">
+
+
 ## Usage
 
 ### Backend setup
@@ -12,7 +23,7 @@ const magicLogin = new MagicLoginStrategy({
   callbackUrl: "/auth/magiclogin/callback",
   confirmUrl: "/auth/magiclogin/confirm",
   sendMagicLink: async (destination, href) => {
-    // You have to implement send the login link to the right 
+    // You have to implement sending the login link to the right 
     // destination (e.g. email or sms) yourself!
     await sendEmail({
       to: destination,
@@ -20,7 +31,8 @@ const magicLogin = new MagicLoginStrategy({
     })
   },
   verify: (payload, callback) => {
-    loadUser(payload.destination).then(user => {
+    // Get or create a user with the provided email in your database
+    getOrCreateUserWithEmail(payload.destination).then(user => {
       callback(null, user)
     }).catch(err => {
       callback(err)
@@ -41,7 +53,7 @@ app.get(magicLogin.callbackUrl, passport.authenticate("magiclogin"));
 fetch(`/auth/magiclogin`, {
   method: `POST`,
   body: JSON.stringify({
-    destination: email,
+    destination: email, // Could also be destination: phoneNumber if you want to use SMS
   }),
   headers: {
     'Content-Type': 'application/json'
