@@ -17,7 +17,7 @@ it('returns some properties', () => {
       },
     })
   ).toMatchInlineSnapshot(`
-    MagicLinkStrategy {
+    MagicLoginStrategy {
       "_options": Object {
         "callbackUrl": "/auth/magiclink/callback",
         "confirmUrl": "/auth/magiclink/confirm",
@@ -26,8 +26,10 @@ it('returns some properties', () => {
         "verify": [Function],
       },
       "callbackUrl": "/auth/magiclink/callback",
+      "confirm": [Function],
       "confirmUrl": "/auth/magiclink/confirm",
       "name": "magiclogin",
+      "send": [Function],
     }
   `);
 });
