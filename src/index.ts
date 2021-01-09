@@ -49,7 +49,7 @@ MagicLinkStrategy.prototype.authenticate = function(req) {
     }
   };
 
-  self.options.verify(payload, verifyCallback);
+  self._options.verify(payload, verifyCallback);
 };
 
 const createMagicLink = (options: Options) => {
