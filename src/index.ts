@@ -20,20 +20,24 @@ interface Options {
   verify: VerifyCallback;
 }
 
-declare class MagicLinkStrategy {
+declare class MagicLoginStrategy {
   constructor(options: Options);
   authenticate(req: Request): void;
+  confirm(req: Request, res: Response): void;
+  send(req: Request, res: Response): void;
 }
 
-function MagicLinkStrategy(options: Options) {
+function MagicLoginStrategy(options: Options) {
   Strategy.call(this);
   this.name = 'magiclogin';
+  this.callbackUrl = options.callbackUrl;
+  this.confirmUrl = options.confirmUrl;
   this._options = options;
 }
 
-util.inherits(MagicLinkStrategy, Strategy);
+util.inherits(MagicLoginStrategy, Strategy);
 
-MagicLinkStrategy.prototype.authenticate = function(req) {
+MagicLoginStrategy.prototype.authenticate = function(req) {
   const self = this;
   const payload = decodeToken({
     secret: self._options.secret,
@@ -52,49 +56,42 @@ MagicLinkStrategy.prototype.authenticate = function(req) {
   self._options.verify(payload, verifyCallback);
 };
 
-const createMagicLink = (options: Options) => {
-  const sendMagicLink = async (req: Request, res: Response) => {
-    if (!req.body.destination) {
-      res.status(400).send('Please specify the destination.');
-      return;
-    }
+MagicLoginStrategy.prototype.send = async function(
+  req: Request,
+  res: Response
+) {
+  if (!req.body.destination) {
+    res.status(400).send('Please specify the destination.');
+    return;
+  }
 
-    const code = Math.floor(Math.random() * 90000) + 10000 + '';
-    const jwt = generateToken({
-      secret: options.secret,
-      destination: req.body.destination,
-      code,
-    });
+  const code = Math.floor(Math.random() * 90000) + 10000 + '';
+  const jwt = generateToken({
+    secret: this._options.secret,
+    destination: req.body.destination,
+    code,
+  });
 
-    await options.sendMagicLink(
-      req.body.destination,
-      `${options.confirmUrl}?token=${jwt}`,
-      code
-    );
+  await this._options.sendMagicLink(
+    req.body.destination,
+    `${this._options.confirmUrl}?token=${jwt}`,
+    code
+  );
 
-    res.json({ success: true, code });
-  };
-
-  const confirmMagicLink = async (req: Request, res: Response) => {
-    const data = decodeToken({
-      token: req.query.token as string,
-      secret: options.secret,
-    });
-
-    if (data) {
-      res.redirect(`${options.callbackUrl}?token=${req.query.token}`);
-    } else {
-      res.send('Expired login link. Please try again!');
-    }
-  };
-
-  return {
-    strategy: new MagicLinkStrategy(options),
-    send: sendMagicLink,
-    confirm: confirmMagicLink,
-    confirmUrl: options.confirmUrl,
-    callbackUrl: options.callbackUrl,
-  };
+  res.json({ success: true, code });
 };
 
-export default createMagicLink;
+MagicLoginStrategy.prototype.confirm = function(req: Request, res: Response) {
+  const data = decodeToken({
+    token: req.query.token as string,
+    secret: this._options.secret,
+  });
+
+  if (data) {
+    res.redirect(`${this._options.callbackUrl}?token=${req.query.token}`);
+  } else {
+    res.send('Expired login link. Please try again!');
+  }
+};
+
+export default MagicLoginStrategy;

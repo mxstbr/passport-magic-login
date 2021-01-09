@@ -5,12 +5,12 @@
 ### Backend setup
 
 ```JS
-import createMagicLink from "passport-magic-login"
+import MagicLoginStrategy from "passport-magic-login"
 
-const magicLink = createMagicLink({
+const magicLogin = new MagicLoginStrategy({
   secret: process.env.MAGIC_LINK_SECRET,
-  callbackUrl: "/auth/magiclink/callback",
-  confirmUrl: "/auth/magiclink/confirm",
+  callbackUrl: "/auth/magiclogin/callback",
+  confirmUrl: "/auth/magiclogin/confirm",
   sendMagicLink: async (destination, href) => {
     // You have to implement send the login link to the right 
     // destination (e.g. email or sms) yourself!
@@ -28,17 +28,17 @@ const magicLink = createMagicLink({
   }
 })
 
-passport.use(magicLink.strategy)
+passport.use(magicLogin)
 
-app.post("/auth/magiclink", magicLink.send);
-app.get(magicLink.confirmUrl, magicLink.confirm);
-app.get(magicLink.callbackUrl, passport.authenticate("magiclink"));
+app.post("/auth/magiclogin", magicLogin.send);
+app.get(magicLogin.confirmUrl, magicLogin.confirm);
+app.get(magicLogin.callbackUrl, passport.authenticate("magiclogin"));
 ```
 
 ### Frontend
 
 ```JS
-fetch(`/auth/magiclink`, {
+fetch(`/auth/magiclogin`, {
   method: `POST`,
   body: JSON.stringify({
     destination: email,
