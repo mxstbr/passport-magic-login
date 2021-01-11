@@ -49,6 +49,7 @@
     "@size-limit/preset-small-lib": "^4.9.1",
     "@types/jsonwebtoken": "^8.5.0",
     "husky": "^4.3.7",
+    "next": "^10.0.5",
     "size-limit": "^4.9.1",
     "tsdx": "^0.14.1",
     "tslib": "^2.1.0",

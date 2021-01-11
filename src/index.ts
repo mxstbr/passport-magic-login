@@ -1,7 +1,14 @@
 import util from 'util';
-import { Request, Response } from 'express';
+import {
+  Request as ExpressRequest,
+  Response as ExpressResponse,
+} from 'express';
+import { NextApiRequest, NextApiResponse } from 'next';
 import { generateToken, decodeToken } from './token';
 const Strategy = require('passport-strategy');
+
+type Request = ExpressRequest | NextApiRequest;
+type Response = ExpressResponse | NextApiResponse;
 
 type VerifyCallback = (
   payload: any,
