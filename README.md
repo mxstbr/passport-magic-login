@@ -1,4 +1,4 @@
-# passport-magic-login
+![passport-magic-login](https://user-images.githubusercontent.com/7525670/104158644-0c61f400-53ee-11eb-960f-167c6ebd3ec9.png)
 
 Passwordless authentication with magic links for Passport.js 🔑
 
@@ -9,12 +9,15 @@ Passwordless authentication with magic links for Passport.js 🔑
 
 Originally implemented by [Tobias Lins](https://twitter.com/linstobias) for [Splitbee](https://splitbee.io) and eventually extracted for [Feedback Fish](https://feedback.fish):
 
-<img width="1230" alt="Screenshot 2021-01-09 at 16 55 23" src="https://user-images.githubusercontent.com/7525670/104096256-ae24fc00-529b-11eb-9d21-cebae7bc706d.png">
+<div align="left">
 
-<img width="1230" alt="Screenshot 2021-01-09 at 16 55 28" src="https://user-images.githubusercontent.com/7525670/104096254-ad8c6580-529b-11eb-9c96-d12e9d14c543.png">
+<img width="32%" alt="Screenshot 2021-01-09 at 16 55 23" src="https://user-images.githubusercontent.com/7525670/104096256-ae24fc00-529b-11eb-9d21-cebae7bc706d.png">
 
-<img width="1230" alt="Screenshot 2021-01-09 at 16 56 24" src="https://user-images.githubusercontent.com/7525670/104096252-a9604800-529b-11eb-92d5-31a144871fe4.png">
+<img width="32%" alt="Screenshot 2021-01-09 at 16 55 28" src="https://user-images.githubusercontent.com/7525670/104096254-ad8c6580-529b-11eb-9c96-d12e9d14c543.png">
 
+<img width="32%" alt="Screenshot 2021-01-09 at 16 56 24" src="https://user-images.githubusercontent.com/7525670/104096252-a9604800-529b-11eb-92d5-31a144871fe4.png">
+
+</div>
 
 ## Usage
 
@@ -69,7 +72,7 @@ app.get(magicLogin.confirmUrl, magicLogin.confirm);
 app.get(magicLogin.callbackUrl, passport.authenticate("magiclogin"));
 ```
 
-### Frontend setup
+### Frontend usage
 
 ```JS
 // POST a request with the users email or phone number to the server
