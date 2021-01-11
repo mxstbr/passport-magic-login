@@ -1,14 +1,20 @@
+import type { IncomingMessage, OutgoingMessage } from 'http';
 import util from 'util';
-import {
-  Request as ExpressRequest,
-  Response as ExpressResponse,
-} from 'express';
-import { NextApiRequest, NextApiResponse } from 'next';
 import { generateToken, decodeToken } from './token';
 const Strategy = require('passport-strategy');
 
-type Request = ExpressRequest | NextApiRequest;
-type Response = ExpressResponse | NextApiResponse;
+interface Request extends IncomingMessage {
+  query: Record<string, string | string[]>
+  body: any
+}
+
+interface Response extends OutgoingMessage {
+  json: (body: any) => void
+  send: (body: any) => void
+  status: (statusCode: number) => Response
+  redirect(url: string): Response
+  redirect(status: number, url: string): Response
+}
 
 type VerifyCallback = (
   payload: any,
