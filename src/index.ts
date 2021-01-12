@@ -4,8 +4,8 @@ import { generateToken, decodeToken } from './token';
 const Strategy = require('passport-strategy');
 
 interface Request extends IncomingMessage {
-  query: Record<string, string | string[]>
-  body: any
+  query: any;
+  body: any;
 }
 
 interface Response extends OutgoingMessage {
