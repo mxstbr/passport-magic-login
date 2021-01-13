@@ -25,9 +25,7 @@ it('returns some properties', () => {
         "sendMagicLink": [Function],
         "verify": [Function],
       },
-      "callbackUrl": "/auth/magiclink/callback",
       "confirm": [Function],
-      "confirmUrl": "/auth/magiclink/confirm",
       "name": "magiclogin",
       "send": [Function],
     }
