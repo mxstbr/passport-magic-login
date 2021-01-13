@@ -1,20 +1,5 @@
-import type { IncomingMessage, OutgoingMessage } from 'http';
-import util from 'util';
+import type { Request, Response } from 'express';
 import { generateToken, decodeToken } from './token';
-const Strategy = require('passport-strategy');
-
-interface Request extends IncomingMessage {
-  query: any;
-  body: any;
-}
-
-interface Response extends OutgoingMessage {
-  json: (body: any) => void
-  send: (body: any) => void
-  status: (statusCode: number) => Response
-  redirect(url: string): Response
-  redirect(status: number, url: string): Response
-}
 
 type VerifyCallback = (
   payload: any,
@@ -41,7 +26,6 @@ declare class MagicLoginStrategy {
 }
 
 function MagicLoginStrategy(options: Options) {
-  Strategy.call(this);
   this.name = 'magiclogin';
   this.callbackUrl = options.callbackUrl;
   this.confirmUrl = options.confirmUrl;
@@ -49,8 +33,6 @@ function MagicLoginStrategy(options: Options) {
   this.send = this.send.bind(this);
   this.confirm = this.confirm.bind(this);
 }
-
-util.inherits(MagicLoginStrategy, Strategy);
 
 MagicLoginStrategy.prototype.authenticate = function(req) {
   const self = this;
