@@ -14,7 +14,8 @@ interface Options {
   sendMagicLink: (
     destination: string,
     href: string,
-    verificationCode: string
+    verificationCode: string,
+    req: Request
   ) => Promise<void>;
   verify: VerifyCallback;
 }
@@ -60,7 +61,8 @@ class MagicLoginStrategy {
       .sendMagicLink(
         req.body.destination,
         `${this._options.confirmUrl}?token=${jwt}`,
-        code
+        code,
+        req
       )
       .then(() => {
         res.json({ success: true, code });
