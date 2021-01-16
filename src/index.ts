@@ -1,5 +1,5 @@
-import type { Request, Response } from 'express';
-import type { StrategyCreatedStatic } from 'passport';
+import { Request, Response } from 'express';
+import { StrategyCreatedStatic } from 'passport';
 import { generateToken, decodeToken } from './token';
 
 type VerifyCallback = (
@@ -22,9 +22,12 @@ interface Options {
 class MagicLoginStrategy {
   name: string = 'magiclogin';
 
-  constructor(private _options: Options) { }
+  constructor(private _options: Options) {}
 
-  authenticate(this: StrategyCreatedStatic & MagicLoginStrategy, req: Request): void {
+  authenticate(
+    this: StrategyCreatedStatic & MagicLoginStrategy,
+    req: Request
+  ): void {
     const self = this;
     const payload = decodeToken({
       secret: self._options.secret,
@@ -39,7 +42,7 @@ class MagicLoginStrategy {
         return self.success(user, info);
       }
     };
-  
+
     self._options.verify(payload, verifyCallback);
   }
 
@@ -48,14 +51,14 @@ class MagicLoginStrategy {
       res.status(400).send('Please specify the destination.');
       return;
     }
-  
+
     const code = Math.floor(Math.random() * 90000) + 10000 + '';
     const jwt = generateToken({
       secret: this._options.secret,
       destination: req.body.destination,
       code,
     });
-  
+
     this._options
       .sendMagicLink(
         req.body.destination,
@@ -69,20 +72,20 @@ class MagicLoginStrategy {
         console.error(error);
         res.json({ success: false, error });
       });
-  }
+  };
 
   confirm = (req: Request, res: Response): void => {
     const data = decodeToken({
       token: req.query.token as string,
       secret: this._options.secret,
     });
-  
+
     if (data) {
       res.redirect(`${this._options.callbackUrl}?token=${req.query.token}`);
     } else {
       res.send('Expired login link. Please try again!');
     }
-  }
+  };
 }
 
 export default MagicLoginStrategy;
