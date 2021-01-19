@@ -3,16 +3,11 @@ import jwt from 'jsonwebtoken';
 type JwtPayload = {
   destination: string;
   code: string;
+  [key: string]: any;
 };
 
-export const decodeToken = ({
-  secret,
-  token,
-}: {
-  secret: string;
-  token?: string;
-}) => {
-  if (!token) {
+export const decodeToken = (secret: string, token?: string) => {
+  if (typeof token !== 'string') {
     return false;
   }
   try {
@@ -22,22 +17,7 @@ export const decodeToken = ({
   }
 };
 
-export const generateToken = ({
-  secret,
-  destination,
-  code,
-}: {
-  secret: string;
-  destination: string;
-  code: string;
-}) =>
-  jwt.sign(
-    {
-      destination,
-      code,
-    },
-    secret,
-    {
-      expiresIn: '60min',
-    }
-  );
+export const generateToken = (secret: string, payload: JwtPayload) =>
+  jwt.sign(payload, secret, {
+    expiresIn: '60min',
+  });

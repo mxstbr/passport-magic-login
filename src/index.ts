@@ -30,10 +30,10 @@ class MagicLoginStrategy {
     req: Request
   ): void {
     const self = this;
-    const payload = decodeToken({
-      secret: self._options.secret,
-      token: req.query.token as string,
-    });
+    const payload = decodeToken(
+      self._options.secret,
+      req.query.token as string
+    );
     const verifyCallback = function(err?: Error, user?: Object, info?: any) {
       if (err) {
         return self.error(err);
@@ -54,9 +54,8 @@ class MagicLoginStrategy {
     }
 
     const code = Math.floor(Math.random() * 90000) + 10000 + '';
-    const jwt = generateToken({
-      secret: this._options.secret,
-      destination: req.body.destination,
+    const jwt = generateToken(this._options.secret, {
+      ...req.body,
       code,
     });
 
@@ -77,10 +76,7 @@ class MagicLoginStrategy {
   };
 
   confirm = (req: Request, res: Response): void => {
-    const data = decodeToken({
-      token: req.query.token as string,
-      secret: this._options.secret,
-    });
+    const data = decodeToken(this._options.secret, req.query.token as string);
 
     if (data) {
       res.redirect(`${this._options.callbackUrl}?token=${req.query.token}`);
