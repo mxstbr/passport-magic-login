@@ -10,7 +10,6 @@ type VerifyCallback = (
 interface Options {
   secret: string;
   callbackUrl: string;
-  confirmUrl: string;
   sendMagicLink: (
     destination: string,
     href: string,
@@ -18,6 +17,9 @@ interface Options {
     req: Request
   ) => Promise<void>;
   verify: VerifyCallback;
+
+  /** @deprecated */
+  confirmUrl?: string;
 }
 
 class MagicLoginStrategy {
@@ -34,6 +36,7 @@ class MagicLoginStrategy {
       self._options.secret,
       req.query.token as string
     );
+
     const verifyCallback = function(err?: Error, user?: Object, info?: any) {
       if (err) {
         return self.error(err);
@@ -62,7 +65,7 @@ class MagicLoginStrategy {
     this._options
       .sendMagicLink(
         req.body.destination,
-        `${this._options.confirmUrl}?token=${jwt}`,
+        `${this._options.callbackUrl}?token=${jwt}`,
         code,
         req
       )
@@ -75,14 +78,12 @@ class MagicLoginStrategy {
       });
   };
 
+  /** @deprecated */
   confirm = (req: Request, res: Response): void => {
-    const data = decodeToken(this._options.secret, req.query.token as string);
-
-    if (data) {
-      res.redirect(`${this._options.callbackUrl}?token=${req.query.token}`);
-    } else {
-      res.send('Expired login link. Please try again!');
-    }
+    console.warn(
+      `magicLink.confirm was removed in v1.0.7, it is no longer necessary.`
+    );
+    res.redirect(`${this._options.callbackUrl}?token=${req.query.token}`);
   };
 }
 

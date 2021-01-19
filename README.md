@@ -41,7 +41,10 @@ This is what the usage from the frontend looks like once you've set it all up. I
 fetch(`/auth/magiclogin`, {
   method: `POST`,
   body: JSON.stringify({
+    // `destination` is required.
     destination: email,
+    // However, you can POST anything in your payload and it will show up in your verify() method
+    name: name,
   }),
   headers: { 'Content-Type': 'application/json' }
 })
@@ -72,9 +75,6 @@ const magicLogin = new MagicLoginStrategy({
 
   // The authentication callback URL
   callbackUrl: "/auth/magiclogin/callback",
-
-  // The token confirmation URL
-  confirmUrl: "/auth/magiclogin/confirm",
 
   // Called with th e generated magic link so you can send it to the user
   // "destination" is what you POST-ed from the client
@@ -115,14 +115,11 @@ Once you've got that, you'll then need to add a couple of routes to your Express
 // This is where we POST to from the frontend
 app.post("/auth/magiclogin", magicLogin.send);
 
-// This is what the user visits to confirm the login attempt and redirects them to the callbackUrl
-app.get(magicLogin.confirmUrl, magicLogin.confirm);
-
-// This is the standard Passport callbackUrl thing
+// The standard passport callback setup
 app.get(magicLogin.callbackUrl, passport.authenticate("magiclogin"));
 ```
 
-That's it, you're ready to authenticate now! 🎉
+That's it, you're ready to authenticate! 🎉
 
 ## License
 
