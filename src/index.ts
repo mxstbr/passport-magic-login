@@ -70,7 +70,7 @@ class MagicLoginStrategy {
         req
       )
       .then(() => {
-        res.json({ success: true, code });
+        res.json({ success: true });
       })
       .catch((error: any) => {
         console.error(error);
