@@ -51,20 +51,21 @@ class MagicLoginStrategy {
   }
 
   send = (req: Request, res: Response): void => {
-    if (!req.body.destination) {
+    const payload = req.method === 'GET' ? req.query : req.body;
+    if (!payload.destination) {
       res.status(400).send('Please specify the destination.');
       return;
     }
 
     const code = Math.floor(Math.random() * 90000) + 10000 + '';
     const jwt = generateToken(this._options.secret, {
-      ...req.body,
+      ...payload,
       code,
     });
 
     this._options
       .sendMagicLink(
-        req.body.destination,
+        payload.destination,
         `${this._options.callbackUrl}?token=${jwt}`,
         code,
         req
