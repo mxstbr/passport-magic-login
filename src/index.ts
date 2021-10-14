@@ -4,7 +4,8 @@ import { generateToken, decodeToken } from './token';
 
 type VerifyCallback = (
   payload: any,
-  verifyCallback: (err?: Error, user?: Object, info?: any) => void
+  verifyCallback: (err?: Error, user?: Object, info?: any) => void,
+  req: Request
 ) => void;
 
 interface Options {
@@ -47,7 +48,7 @@ class MagicLoginStrategy {
       }
     };
 
-    self._options.verify(payload, verifyCallback);
+    self._options.verify(payload, verifyCallback, req);
   }
 
   send = (req: Request, res: Response): void => {
