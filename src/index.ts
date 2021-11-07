@@ -11,6 +11,7 @@ type VerifyCallback = (
 interface Options {
   secret: string;
   callbackUrl: string;
+  expiresIn: string;
   sendMagicLink: (
     destination: string,
     href: string,
@@ -59,10 +60,10 @@ class MagicLoginStrategy {
     }
 
     const code = Math.floor(Math.random() * 90000) + 10000 + '';
-    const jwt = generateToken(this._options.secret, {
+    const t = generateToken(this._options.secret, {
       ...payload,
-      code,
-    });
+      code
+    }, this._options.expiresIn)
 
     this._options
       .sendMagicLink(
