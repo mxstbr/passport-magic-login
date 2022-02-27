@@ -18,6 +18,7 @@ interface Options {
     req: Request
   ) => Promise<void>;
   verify: VerifyCallback;
+  tokenTtlInMinutes?: number;
 
   /** @deprecated */
   confirmUrl?: string;
@@ -62,7 +63,8 @@ class MagicLoginStrategy {
     const jwt = generateToken(this._options.secret, {
       ...payload,
       code,
-    });
+    },
+    this._options.tokenTtlInMinutes);
 
     this._options
       .sendMagicLink(

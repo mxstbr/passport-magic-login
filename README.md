@@ -76,7 +76,10 @@ const magicLogin = new MagicLoginStrategy({
   // The authentication callback URL
   callbackUrl: "/auth/magiclogin/callback",
 
-  // Called with th e generated magic link so you can send it to the user
+  // optional - token validity time in minutes. if not passed the default is 60 minutes.
+  tokenTtlInMinutes: 30,
+
+  // Called with the generated magic link so you can send it to the user
   // "destination" is what you POST-ed from the client
   // "href" is your confirmUrl with the confirmation token,
   // for example "/auth/magiclogin/confirm?token=<longtoken>"
@@ -112,10 +115,10 @@ passport.use(magicLogin)
 Once you've got that, you'll then need to add a couple of routes to your Express server:
 
 ```JS
-// This is where we POST to from the frontend
+// This is where we POST to from the frontend (generates magic token)
 app.post("/auth/magiclogin", magicLogin.send);
 
-// The standard passport callback setup
+// The standard passport callback setup (validates magic token)
 app.get(magicLogin.callbackUrl, passport.authenticate("magiclogin"));
 ```
 
