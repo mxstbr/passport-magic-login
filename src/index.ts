@@ -60,11 +60,14 @@ class MagicLoginStrategy {
     }
 
     const code = Math.floor(Math.random() * 90000) + 10000 + '';
-    const jwt = generateToken(this._options.secret, {
-      ...payload,
-      code,
-    },
-    this._options.tokenTtlInMinutes);
+    const jwt = generateToken(
+      this._options.secret,
+      {
+        ...payload,
+        code,
+      },
+      this._options.tokenTtlInMinutes
+    );
 
     this._options
       .sendMagicLink(
