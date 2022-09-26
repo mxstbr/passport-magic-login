@@ -7,7 +7,9 @@ type JwtPayload = {
 };
 
 export const decodeToken = (secret: string, token?: string) => {
-  return jwt.verify(token, secret) as JwtPayload;
+  if (typeof token !== 'string') throw new Error('No token provided');
+
+  return jwt.verify(token, secret);
 };
 
 export const generateToken = (secret: string, payload: JwtPayload) =>
