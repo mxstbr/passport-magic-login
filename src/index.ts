@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import { SignOptions } from 'jsonwebtoken';
 import { StrategyCreatedStatic } from 'passport';
 import { generateToken, decodeToken } from './token';
 
@@ -11,6 +12,7 @@ type VerifyCallback = (
 interface Options {
   secret: string;
   callbackUrl: string;
+  jwtOptions?: SignOptions;
   sendMagicLink: (
     destination: string,
     href: string,
@@ -59,10 +61,14 @@ class MagicLoginStrategy {
     }
 
     const code = Math.floor(Math.random() * 90000) + 10000 + '';
-    const jwt = generateToken(this._options.secret, {
-      ...payload,
-      code,
-    });
+    const jwt = generateToken(
+      this._options.secret,
+      {
+        ...payload,
+        code,
+      },
+      this._options.jwtOptions
+    );
 
     this._options
       .sendMagicLink(
