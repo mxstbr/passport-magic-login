@@ -73,11 +73,6 @@ const magicLogin = new MagicLoginStrategy({
   // Used to encrypt the authentication token. Needs to be long, unique and (duh) secret.
   secret: process.env.MAGIC_LINK_SECRET,
 
-  // jwtOptions object passed through jwt.sign
-  jwtOptions: {
-    expiresIn: "2 days",
-  }
-
   // The authentication callback URL
   callbackUrl: "/auth/magiclogin/callback",
 
@@ -107,6 +102,12 @@ const magicLogin = new MagicLoginStrategy({
       .catch(err => {
         callback(err)
       })
+  }
+  
+  
+  // Optional: options passed to the jwt.sign call (https://github.com/auth0/node-jsonwebtoken#jwtsignpayload-secretorprivatekey-options-callback)
+  jwtOptions: {
+    expiresIn: "2 days",
   }
 })
 
