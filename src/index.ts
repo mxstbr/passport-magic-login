@@ -37,7 +37,7 @@ class MagicLoginStrategy {
     const self = this;
     const payload = decodeToken(
       self._options.secret,
-      req.query.token as string
+      (req.query.token || req.body?.token) as string
     );
 
     const verifyCallback = function(err?: Error, user?: Object, info?: any) {
