@@ -103,6 +103,12 @@ const magicLogin = new MagicLoginStrategy({
         callback(err)
       })
   }
+  
+  
+  // Optional: options passed to the jwt.sign call (https://github.com/auth0/node-jsonwebtoken#jwtsignpayload-secretorprivatekey-options-callback)
+  jwtOptions: {
+    expiresIn: "2 days",
+  }
 })
 
 // Add the passport-magic-login strategy to Passport
