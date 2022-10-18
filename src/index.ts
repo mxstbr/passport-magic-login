@@ -5,7 +5,7 @@ import { generateToken, decodeToken } from './token';
 
 type VerifyCallback = (
   payload: any,
-  verifyCallback: (err?: Error, user?: Object, info?: any) => void,
+  verifyCallback: (err?: Error | null, user?: Object, info?: any) => void,
   req: Request
 ) => void;
 
