@@ -55,6 +55,11 @@ class MagicLoginStrategy {
 
   send = (req: Request, res: Response): void => {
     const payload = req.method === 'GET' ? req.query : req.body;
+    if (req.method === 'POST' && !req.headers.match("application/json") {
+      res.status(400).send('Content-Type must be application/json when using POST method.')
+      return;
+    }
+    
     if (!payload.destination) {
       res.status(400).send('Please specify the destination.');
       return;
