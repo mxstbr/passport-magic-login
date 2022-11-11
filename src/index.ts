@@ -35,10 +35,20 @@ class MagicLoginStrategy {
     req: Request
   ): void {
     const self = this;
-    const payload = decodeToken(
-      self._options.secret,
-      (req.query.token || req.body?.token) as string
-    );
+
+    let payload = null;
+
+    try {
+      payload = decodeToken(
+        self._options.secret,
+        (req.query.token || req.body?.token) as string
+      );
+    } catch (error) {
+      const defaultMessage = 'No valid token provided';
+      const message = error instanceof Error ? error.message : defaultMessage;
+
+      return self.fail(message);
+    }
 
     const verifyCallback = function(
       err?: Error | null,
