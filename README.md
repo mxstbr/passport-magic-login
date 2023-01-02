@@ -130,3 +130,10 @@ That's it, you're ready to authenticate! 🎉
 ## License
 
 Licensed under the MIT license. See [LICENSE](./LICENSE) for more information!
+
+## Featured
+<a href="https://unzip.dev/0x001-magic-links/#tools-players-%F0%9F%9B%A0%EF%B8%8F" alt="Featured Magic on Unzip.dev">
+<img alt="Unzip.dev badge" src="https://img.shields.io/badge/Featured%20on-Unzip.dev-fa2367" />
+</a>
+
+
