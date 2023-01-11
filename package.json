@@ -48,7 +48,7 @@
   "devDependencies": {
     "@size-limit/preset-small-lib": "^4.9.1",
     "@types/express": "^4.17.11",
-    "@types/jsonwebtoken": "^8.5.0",
+    "@types/jsonwebtoken": "^9.0.0",
     "@types/passport": "^1.0.5",
     "husky": "^4.3.7",
     "size-limit": "^4.9.1",
@@ -58,6 +58,6 @@
   },
   "dependencies": {
     "@types/node": "^14.14.20",
-    "jsonwebtoken": "^8.5.1"
+    "jsonwebtoken": "^9.0.0"
   }
 }
