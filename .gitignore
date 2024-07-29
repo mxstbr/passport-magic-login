@@ -2,6 +2,6 @@
 .DS_Store
 node_modules
 dist
-lock.json
- *-lock.yaml
- *.lock 
+*-lock.json
+*-lock.yaml
+*.lock 
