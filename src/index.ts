@@ -25,6 +25,16 @@ interface Options {
   confirmUrl?: string;
 }
 
+interface Payload {
+  [key: string]: any;
+  destination: string;
+}
+
+interface MagicLinkInfo {
+  href: string;
+  code: string;
+}
+
 class MagicLoginStrategy {
   name: string = 'magiclogin';
 
@@ -50,7 +60,7 @@ class MagicLoginStrategy {
       return self.fail(message);
     }
 
-    const verifyCallback = function(
+    const verifyCallback = function (
       err?: Error | null,
       user?: Object,
       info?: any
@@ -68,7 +78,7 @@ class MagicLoginStrategy {
   }
 
   send = (req: Request, res: Response): void => {
-    const payload = req.method === 'GET' ? req.query : req.body;
+    const payload: Payload = req.method === 'GET' ? req.query : req.body;
     if (
       req.method === 'POST' &&
       !req.headers['content-type']?.match('application/json')
@@ -84,6 +94,25 @@ class MagicLoginStrategy {
       return;
     }
 
+    const { href, code } = this.create(payload);
+
+    this._options
+      .sendMagicLink(payload.destination, href, code, req)
+      .then(() => {
+        res.json({ success: true, code });
+      })
+      .catch((error: any) => {
+        console.error(error);
+        res.json({ success: false, error });
+      });
+  };
+
+  create(destination: string): MagicLinkInfo;
+  create(payload: Payload): MagicLinkInfo;
+  create(payload: Payload | string): MagicLinkInfo {
+    if (typeof payload === 'string') {
+      payload = { destination: payload };
+    }
     const code = Math.floor(Math.random() * 90000) + 10000 + '';
     const jwt = generateToken(
       this._options.secret,
@@ -93,22 +122,10 @@ class MagicLoginStrategy {
       },
       this._options.jwtOptions
     );
+    const href = `${this._options.callbackUrl}?token=${jwt}`;
 
-    this._options
-      .sendMagicLink(
-        payload.destination,
-        `${this._options.callbackUrl}?token=${jwt}`,
-        code,
-        req
-      )
-      .then(() => {
-        res.json({ success: true, code });
-      })
-      .catch((error: any) => {
-        console.error(error);
-        res.json({ success: false, error });
-      });
-  };
+    return { href, code };
+  }
 
   /** @deprecated */
   confirm = (req: Request, res: Response): void => {
