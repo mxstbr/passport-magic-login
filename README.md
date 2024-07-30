@@ -76,7 +76,7 @@ const magicLogin = new MagicLoginStrategy({
   // The authentication callback URL
   callbackUrl: "/auth/magiclogin/callback",
 
-  // Called with th e generated magic link so you can send it to the user
+  // Called with the generated magic link so you can send it to the user
   // "destination" is what you POST-ed from the client
   // "href" is your confirmUrl with the confirmation token,
   // for example "/auth/magiclogin/confirm?token=<longtoken>"
@@ -126,6 +126,25 @@ app.get(magicLogin.callbackUrl, passport.authenticate("magiclogin"));
 ```
 
 That's it, you're ready to authenticate! 🎉
+
+#### Creating a magic link without POST
+
+If you need to create a magic link without POSTing data to the API you can use the `create` method, for example:
+
+```JS
+const sendCustomerNotification = async (destination: string) => {
+  // The `create` method generates a magic link for the specified destination (email) 
+  // and returns a URL and verification code 
+  const { href, code } = magicLogin.create(destination);
+
+  await sendEmail({
+    to: destination,
+    body: `You have a new document! Click this link to login: https://yourcompany.com${href} (verification code ${code})`
+  });
+};
+
+sendCustomerNotification('customer@email.address');
+```
 
 ## License
 
