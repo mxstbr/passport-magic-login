@@ -9,7 +9,7 @@ type VerifyCallback = (
   req: Request
 ) => void;
 
-interface Options {
+export interface Options {
   secret: string;
   callbackUrl: string;
   jwtOptions?: SignOptions;
