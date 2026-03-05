@@ -120,3 +120,4 @@ class MagicLoginStrategy {
 }
 
 export default MagicLoginStrategy;
+
